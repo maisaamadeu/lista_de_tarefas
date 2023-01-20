@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lista_de_tarefas/models/todo.dart';
 import 'package:lista_de_tarefas/widgets/todo_list_item.dart';
 
 class TodoListPage extends StatefulWidget {
@@ -10,13 +11,13 @@ class TodoListPage extends StatefulWidget {
 
 class _TodoListPageState extends State<TodoListPage> {
   final TextEditingController todoController = TextEditingController();
-  final List<String> todoList = <String>[];
+  final List<Todo> todoList = [];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -47,7 +48,11 @@ class _TodoListPageState extends State<TodoListPage> {
 
                         if (text != '') {
                           setState(() {
-                            todoList.add(text);
+                            Todo newTodo = Todo(
+                              title: text,
+                              dateTime: DateTime.now(),
+                            );
+                            todoList.add(newTodo);
                             todoController.clear();
                           });
                         }
@@ -73,7 +78,7 @@ class _TodoListPageState extends State<TodoListPage> {
                   child: ListView(
                     shrinkWrap: true,
                     children: [
-                      for (String todo in todoList) TodoListItem(todo: todo),
+                      for (Todo todo in todoList) TodoListItem(todo: todo),
                     ],
                   ),
                 ),
@@ -85,14 +90,22 @@ class _TodoListPageState extends State<TodoListPage> {
                 //CLEAR AREA
                 Row(
                   children: [
-                    const Expanded(
-                      child: Text('Você possui 0 tarefas pendentes'),
+                    Expanded(
+                      child: Text(
+                          'Você possui ${todoList.length} tarefas pendentes'),
                     ),
                     const SizedBox(
                       width: 8,
                     ),
                     ElevatedButton(
-                      onPressed: () => {},
+                      onPressed: () => {
+                        if (todoList != [])
+                          {
+                            setState(() {
+                              todoList.clear();
+                            })
+                          }
+                      },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(14),
                         shape: const StadiumBorder(),
