@@ -15,6 +15,7 @@ class _TodoListPageState extends State<TodoListPage> {
   final TodoRepository todoRepository = TodoRepository();
 
   List<Todo> todos = [];
+  bool errorTextField = false;
 
   @override
   void initState() {
@@ -58,6 +59,9 @@ class _TodoListPageState extends State<TodoListPage> {
                           ),
                           hintText: 'Ex: Ir ao mercado',
                           labelText: 'Adicione uma tarefa',
+                          errorText: errorTextField
+                              ? 'Não é possível adicionar uma tarefa vazia'
+                              : null,
                         ),
                       ),
                     ),
@@ -76,7 +80,12 @@ class _TodoListPageState extends State<TodoListPage> {
                             );
                             todos.add(newTodo);
                             todoController.clear();
+                            errorTextField = false;
                             todoRepository.saveTodoList(todos);
+                          });
+                        } else {
+                          setState(() {
+                            errorTextField = true;
                           });
                         }
                       },
